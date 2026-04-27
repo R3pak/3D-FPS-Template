@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://camdm84dn2msg" path="res://assets/FPS-controller-assets-main/FPS-controller-assets-main/assets/textures/dev/grids/Dark/texture_07.png" id="1_0wfyh"]
 [ext_resource type="Texture2D" uid="uid://nxrsacwob70r" path="res://assets/FPS-controller-assets-main/FPS-controller-assets-main/assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_sugp2"]
+[ext_resource type="Script" uid="uid://8wl3rjo32i6x" path="res://scripts/player.gd" id="3_sugp2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tlwt5"]
 albedo_texture = ExtResource("1_0wfyh")
@@ -19,14 +20,25 @@ sky = SubResource("Sky_tlwt5")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sugp2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jyhfs"]
+height = 1.2
+
 [node name="World" type="Node3D" unique_id=1516708210]
 
 [node name="Stage" type="Node3D" parent="." unique_id=1039459248]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Stage" unique_id=777165261]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 40)
 use_collision = true
-size = Vector3(20, 1, 20)
+size = Vector3(20, 1, 100)
+material = SubResource("StandardMaterial3D_tlwt5")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Stage" unique_id=2222426]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -6)
+use_collision = true
+size = Vector3(14, 1, 4)
 material = SubResource("StandardMaterial3D_tlwt5")
 
 [node name="Env" type="Node3D" parent="." unique_id=123612741]
@@ -37,3 +49,25 @@ environment = SubResource("Environment_aqk2v")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Env" unique_id=647523718]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
+
+[node name="PlayerBody" type="CharacterBody3D" parent="Env" unique_id=1341647416]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("3_sugp2")
+
+[node name="StandingCollider" type="CollisionShape3D" parent="Env/PlayerBody" unique_id=1489928369]
+shape = SubResource("CapsuleShape3D_sugp2")
+disabled = true
+
+[node name="CrouchingCollider" type="CollisionShape3D" parent="Env/PlayerBody" unique_id=958908545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+shape = SubResource("CapsuleShape3D_jyhfs")
+
+[node name="Head" type="Node3D" parent="Env/PlayerBody" unique_id=1852714659]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Env/PlayerBody/Head" unique_id=179910824]
+
+[node name="RayCast3D" type="RayCast3D" parent="Env/PlayerBody" unique_id=2019937781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, 2, 0)
+debug_shape_thickness = 5
